@@ -30,19 +30,42 @@ while (bombNumbers.length < 16) {
 }
 console.table(bombNumbers);
 
-//GAME: Ask user to choose up to 84 different numbers (from 1 to 100) until he choose a bomb number and print the score (1 point per each number that is not a bomb)
+//Ask user to choose the difficulty level (easy, medium, difficult)
+do {
+  var difficulty = prompt(
+    "Scegli il livello di difficoltà: 'facile', 'normale', 'difficile'"
+  )
+    .toLocaleLowerCase()
+    .trim();
+} while (
+  difficulty !== "facile" &&
+  difficulty !== "normale" &&
+  difficulty !== "difficile"
+);
+
+//Choose the maximum of numbers to insert (based on the difficulty level)
+var max;
+if (difficulty === "facile") {
+  max = 100 - 16;
+} else if (difficulty === "normale") {
+  max = 80 - 16;
+} else if (difficulty === "difficile") {
+  max = 50 - 16;
+}
+
+//GAME: Ask user to choose up to 84 different numbers until he picks a bomb (this will make the game end). 
 const userNumbers = [];
 let chosenNumber;
 let score = 0;
 let n = 0;
-while (userNumbers.length < 100 - 16 && !bombNumbers.includes(chosenNumber)) {
+while (userNumbers.length < max && !bombNumbers.includes(chosenNumber)) {
   chosenNumber = parseInt(
     prompt("Scegli un numero tra 1 e 100 (" + (n + 1) + ")")
   );
   if (
     isNaN(chosenNumber) ||
     chosenNumber < 1 ||
-    chosenNumber > 100 ||
+    chosenNumber > max ||
     userNumbers.includes(chosenNumber)
   ) {
     n--;
@@ -53,12 +76,15 @@ while (userNumbers.length < 100 - 16 && !bombNumbers.includes(chosenNumber)) {
   n++;
 }
 console.table(userNumbers);
-userNumbersPlaceholder.innerText = "Hai scelto con successo: " + userNumbers.join(", ");
+userNumbersPlaceholder.innerText =
+"Hai scelto con successo: " + userNumbers.join(", ");
 
-//Check if the user has choosen any bomb number and print the result of the game
+//Check if the user has picked any bomb number and print the result of the game
 if (bombNumbers.includes(chosenNumber)) {
   alert("GAME OVER!");
-  messagePlaceholder.innerText = "Hai fatto esplodere una bomba al numero " + chosenNumber + ". GAME OVER!";
+  messagePlaceholder.innerText =
+  "Hai fatto esplodere una bomba al numero " + chosenNumber + ". GAME OVER!";
 }
+//Print the score (1 point per each number that is not a bomb)
 console.log("Score = " + score);
 scorePlaceholder.innerText = "Hai totalizzato " + score + " punti";
